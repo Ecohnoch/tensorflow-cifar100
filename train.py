@@ -73,9 +73,6 @@ def train(args):
     x_test = x_test.transpose(0, 2, 3, 1)
     y_test= test[b'fine_labels']
 
-    print(compute_mean_var(x_train))
-    print(compute_mean_var(x_test))
-
     x_train = norm_images(x_train)
     x_test = norm_images(x_test)
 
@@ -188,7 +185,17 @@ def train(args):
                     now_lr = lr_schedule(i)
                     break
 
-def test(network='resnet18', ckpt='params/distinct/Speaker_vox_iter_13000.ckpt'):
+def test(args):
+    test = unpickle(args.test_path)
+    test_data  = test[b'data']
+    x_test = test_data.reshape(test_data.shape[0], 3, 32, 32)
+    x_test = x_test.transpose(0, 2, 3, 1)
+    y_test= test[b'fine_labels']
+    x_test = norm_images(x_test)
+
+    network = args.network
+    ckpt = args.ckpt
+
     x_input = tf.placeholder(tf.float32, [None, 32, 32, 3])
     y_input = tf.placeholder(tf.int64, [None, ])
 
@@ -201,6 +208,8 @@ def test(network='resnet18', ckpt='params/distinct/Speaker_vox_iter_13000.ckpt')
     acc  = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(logit_softmax, 1), y_input), tf.float32))
 
     #-------------------------------Test-----------------------------------------
+    if not os.path.exists('./trans/tran.tfrecords'):
+        generate_tfrecord(x_test, y_test, './trans/', 'test.tfrecords')
     dataset_test = tf.data.TFRecordDataset('./trans/test.tfrecords')
     dataset_test = dataset_test.map(parse_test)
     dataset_test = dataset_test.shuffle(buffer_size=10000)
@@ -256,8 +265,9 @@ if __name__ == "__main__":
 
     # Test
     parser_test = subparsers.add_parser('test')
-    parser_train.add_argument('--net', default='resnet18', type=str, required=True)
-    parser_train.add_argument('--ckpt', default='params/distinct/Speaker_vox_iter_13000.ckpt', type=str, required=True)
+    parser_test.add_argument('--network', default='resnet18', required=True)
+    parser_test.add_argument('--test_path', default='/data/ChuyuanXiong/up/cifar-100-python/test', required=True)
+    parser_test.add_argument('--ckpt', default='/home/ChuyuanXiong/test/params/distinct/Speaker_vox_iter_58000.ckpt', required=True)
     parser_test.set_defaults(func=test)
 
 

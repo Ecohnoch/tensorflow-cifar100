@@ -1,6 +1,8 @@
 import numpy as np 
 import tensorflow as tf
 import random
+import pickle
+import os
 
 def compute_mean_var(image):
     # image.shape: [image_num, w, h, c]
@@ -27,6 +29,8 @@ def unpickle(file):
     return dict
 
 def generate_tfrecord(train, labels, output_path, output_name):
+    if not os.path.exists(output_path):
+        os.mkdir(output_path)
     writer = tf.python_io.TFRecordWriter(os.path.join(output_path, output_name))
     for ind, (file, label) in enumerate(zip(train, labels)):
         img_raw = file.tobytes()
