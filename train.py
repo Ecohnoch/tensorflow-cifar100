@@ -1,11 +1,3 @@
-import numpy as np 
-
-
-
-train = unpickle('/data/ChuyuanXiong/up/cifar-100-python/train')
-test = unpickle('/data/ChuyuanXiong/up/cifar-100-python/test')
-
-
 import matplotlib.pyplot as plt 
 import tensorflow as tf 
 import numpy as np 
@@ -15,7 +7,9 @@ import math
 import cv2
 import os
 
-from resnet50 import resnet50
+from model.resnet34 import resnet34
+from model.resnet50 import resnet50
+
 from utils import compute_mean_var, norm_images, unpickle, generate_tfrecord
 
 
@@ -49,12 +43,20 @@ def parse_test(example_proto):
     label = tf.cast(features['label'], tf.int64)
     return img, label
 
+def lr_schedule(epoch):
+    if epoch < 60:
+        return 0.1
+    if epoch < 100:
+        return 0.02
+    
+
 def train(args):
     batch_size = args.batch_size
     epoch = args.epoch
     network = args.network
     opt = args.opt
-
+    train = unpickle(args.train_path)
+    test = unpickle(args.test_path)
     train_data = train[b'data']
     test_data  = test[b'data']
 
@@ -179,16 +181,7 @@ def train(args):
                                 break
                 except tf.errors.OutOfRangeError:
                     print('end epoch %d/%d , lr: %f'%(i, epoch, lr_val))
-                    if i == 60:
-                        now_lr = 0.02
-                    elif i == 120:
-                        now_lr = 0.004
-                    elif i == 70:
-                        now_lr /= 10
-                    elif i == 90:
-                        now_lr /= 10
-                    elif i == 100:
-                        now_lr /= 10
+                    now_lr = lr_schedule(i)
                     break
 
 def test(network='resnet18', ckpt='params/distinct/Speaker_vox_iter_13000.ckpt'):
@@ -255,6 +248,8 @@ if __name__ == "__main__":
     parser_train.add_argument('--epoch', default=200, type=int, required=True)
     parser_train.add_argument('--network', default='resnet50', required=True)
     parser_train.add_argument('--opt', default='adam', required=True)
+    parser_train.add_argument('--train_path', default='/data/ChuyuanXiong/up/cifar-100-python/train', required=True)
+    parser_train.add_argument('--test_path', default='/data/ChuyuanXiong/up/cifar-100-python/test', required=True)
     parser_train.set_defaults(func=train)
 
     # Test
