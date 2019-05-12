@@ -46,8 +46,12 @@ def parse_test(example_proto):
 def lr_schedule(epoch):
     if epoch < 60:
         return 0.1
-    if epoch < 100:
+    if epoch < 120:
         return 0.02
+    if epoch < 160:
+        return 0.004
+    if epoch < 200:
+        return 0.0008
     
 
 def train(args):
@@ -139,7 +143,7 @@ def train(args):
 
     logit_softmax_test = tf.nn.softmax(prob_test)
     acc_test = tf.reduce_sum(tf.cast(tf.equal(tf.argmax(logit_softmax_test, 1), y_input), tf.float32))
-
+    #----------------------------------------------------------------------------
     saver = tf.train.Saver()
     config = tf.ConfigProto()
     config.allow_soft_placement = True
@@ -243,11 +247,9 @@ if __name__ == "__main__":
     # Train
     parser_train = subparsers.add_parser('train')
     parser_train.add_argument('--batch_size', default=64, type=int, required=True)
-    parser_train.add_argument('--lr', default=[0.01, 0.005, 0.001, 0.0005, 0.0001], required=True)
-    parser_train.add_argument('--boundaries', default=[10000, 15000, 20000, 25000], required=True)
     parser_train.add_argument('--epoch', default=200, type=int, required=True)
-    parser_train.add_argument('--network', default='resnet50', required=True)
-    parser_train.add_argument('--opt', default='adam', required=True)
+    parser_train.add_argument('--network', default='resnet18', required=True)
+    parser_train.add_argument('--opt', default='momentum', required=True)
     parser_train.add_argument('--train_path', default='/data/ChuyuanXiong/up/cifar-100-python/train', required=True)
     parser_train.add_argument('--test_path', default='/data/ChuyuanXiong/up/cifar-100-python/test', required=True)
     parser_train.set_defaults(func=train)
