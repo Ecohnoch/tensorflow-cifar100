@@ -36,7 +36,6 @@ def parse_test(example_proto):
     features = {'image_raw': tf.FixedLenFeature([], tf.string),
                 'label': tf.FixedLenFeature([], tf.int64)}
     features = tf.parse_single_example(example_proto, features)
-    # You can do more image distortion here for training data
     img = tf.decode_raw(features['image_raw'], tf.float32)
     img = tf.reshape(img, shape=(32, 32, 3))
 
@@ -200,7 +199,7 @@ def test(args):
     y_input = tf.placeholder(tf.int64, [None, ])
 
     if network == 'resnet50':
-        prob = resnet50(x_input, is_training=True, kernel_initializer=None)
+        prob = resnet50(x_input, is_training=True)
     elif network == 'resnet18':
         prob = resnet34(x_input, is_training=True)
 
@@ -219,7 +218,7 @@ def test(args):
     if network == 'resnet50':
         prob_test = resnet50(x_input, is_training=False, reuse=True)
     elif network == 'resnet18':
-        prob_test = resnet34(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob_test = resnet34(x_input, is_training=False, reuse=True)
     # prob_test = tf.layers.dense(prob_test, 100, reuse=True, name='before_softmax')
     logit_softmax_test = tf.nn.softmax(prob_test)
     acc_test = tf.reduce_sum(tf.cast(tf.equal(tf.argmax(logit_softmax_test, 1), y_input), tf.float32))

@@ -7,19 +7,19 @@ def identity_block2d(input_tensor, kernel_size, filters, stage, block, is_traini
 	conv_name_1 = 'conv' + str(stage) + '_' + str(block) + '_1x1_reduce'
 	bn_name_1   = 'bn'   + str(stage) + '_' + str(block) + '_1x1_reduce'
 
-	x = tf.layers.conv2d(input_tensor, filters1, (1, 1), use_bias=False, name=conv_name_1, reuse=reuse, kernel_initializer=kernel_initializer)
+	x = tf.layers.conv2d(input_tensor, filters1, (1, 1), use_bias=False, padding='SAME', name=conv_name_1, reuse=reuse, kernel_initializer=kernel_initializer)
 	x = tf.layers.batch_normalization(x, training=is_training, name=bn_name_1, reuse=reuse)
 	x = tf.nn.relu(x)
 
 	conv_name_2 = 'conv' + str(stage) + '_' + str(block) + '_3x3'
 	bn_name_2   = 'bn'   + str(stage) + '_' + str(block) + '_3x3'
-	x = tf.layers.conv2d(x, filters2, kernel_size=(1,1), padding='SAME', use_bias=False, name=conv_name_2, reuse=reuse, kernel_initializer=kernel_initializer)
+	x = tf.layers.conv2d(x, filters2, kernel_size=(3,3), padding='SAME', use_bias=False, name=conv_name_2, reuse=reuse, kernel_initializer=kernel_initializer)
 	x = tf.layers.batch_normalization(x, training=is_training, name=bn_name_2, reuse=reuse)
 	x = tf.nn.relu(x)
 
 	conv_name_3 = 'conv' + str(stage) + '_' + str(block) + '_1x1_increase'
 	bn_name_3   = 'bn'   + str(stage) + '_' + str(block) + '_1x1_increase'
-	x = tf.layers.conv2d(x, filters3, (1,1), name=conv_name_3, use_bias=False, reuse=reuse, kernel_initializer=kernel_initializer)
+	x = tf.layers.conv2d(x, filters3, (1,1), name=conv_name_3, padding='SAME', use_bias=False, reuse=reuse, kernel_initializer=kernel_initializer)
 	x = tf.layers.batch_normalization(x, training=is_training, name=bn_name_3, reuse=reuse)
 	
 	x = tf.add(input_tensor, x)
@@ -32,7 +32,7 @@ def conv_block_2d(input_tensor, kernel_size, filters, stage, block, is_training,
 
 	conv_name_1 = 'conv' + str(stage) + '_' + str(block) + '_1x1_reduce'
 	bn_name_1   = 'bn'   + str(stage) + '_' + str(block) + '_1x1_reduce'
-	x = tf.layers.conv2d(input_tensor, filters1, (1, 1), use_bias=False, strides=strides, name=conv_name_1, reuse=reuse, kernel_initializer=kernel_initializer)
+	x = tf.layers.conv2d(input_tensor, filters1, (1, 1), use_bias=False, padding='SAME',  strides=strides, name=conv_name_1, reuse=reuse, kernel_initializer=kernel_initializer)
 	x = tf.layers.batch_normalization(x, training=is_training, name=bn_name_1, reuse=reuse)
 	x = tf.nn.relu(x)
 
@@ -44,12 +44,12 @@ def conv_block_2d(input_tensor, kernel_size, filters, stage, block, is_training,
 
 	conv_name_3 = 'conv' + str(stage) + '_' + str(block) + '_1x1_increase'
 	bn_name_3   = 'bn'   + str(stage) + '_' + str(block) + '_1x1_increase'
-	x = tf.layers.conv2d(x, filters3, (1,1), name=conv_name_3, use_bias=False, reuse=reuse, kernel_initializer=kernel_initializer)
+	x = tf.layers.conv2d(x, filters3, (1,1), name=conv_name_3, padding='SAME', use_bias=False, reuse=reuse, kernel_initializer=kernel_initializer)
 	x = tf.layers.batch_normalization(x, training=is_training, name=bn_name_3, reuse=reuse)
 
 	conv_name_4 = 'conv' + str(stage) + '_' + str(block) + '_1x1_shortcut'
 	bn_name_4   = 'bn'   + str(stage) + '_' + str(block) + '_1x1_shortcut'
-	shortcut = tf.layers.conv2d(input_tensor, filters3, (1,1), use_bias=False, strides=strides, name=conv_name_4, reuse=reuse, kernel_initializer=kernel_initializer)
+	shortcut = tf.layers.conv2d(input_tensor, filters3, (1,1), padding='SAME', use_bias=False, strides=strides, name=conv_name_4, reuse=reuse, kernel_initializer=kernel_initializer)
 	shortcut = tf.layers.batch_normalization(shortcut, training=is_training, name=bn_name_4, reuse=reuse)
 
 	x = tf.add(shortcut, x)
@@ -57,7 +57,7 @@ def conv_block_2d(input_tensor, kernel_size, filters, stage, block, is_training,
 	return x
 
 
-def resnet50(input_tensor, is_training=True, pooling_and_fc=True, reuse=False, kernel_initializer=tf.contrib.layers.xavier_initializer(uniform=False)):
+def resnet50(input_tensor, is_training=True, pooling_and_fc=True, reuse=False, kernel_initializer=tf.contrib.layers.xavier_initializer()):
 	x = tf.layers.conv2d(input_tensor, 64, (3,3), strides=(1,1), padding='SAME', use_bias=False, kernel_initializer=kernel_initializer, name='face_conv1_1/3x3_s1', reuse=reuse)
 	x = tf.layers.batch_normalization(x, training=is_training, name='face_bn1_1/3x3_s1', reuse=reuse)
 	x = tf.nn.relu(x)
