@@ -8,8 +8,8 @@ import cv2
 import os
 
 from model.resnet34 import resnet18, resnet34
-from model.resnet50_tl import resnet50
-from model.serenset50 import se_resnet50
+from model.resnet50_tl import resnet50, resnet110
+from model.serenset50 import se_resnet50, se_resnet110
 
 from utils import compute_mean_var, norm_images, unpickle, generate_tfrecord, norm_images_using_mean_var
 
@@ -29,7 +29,8 @@ def parse_function(example_proto):
     flip = random.getrandbits(1)
     if flip:
         img = img[:, ::-1, :]
-    # rot = random.randint(0, 3)
+    # rot = random.randint(-15, 15)
+    # img = tf.contrib.image.rotate(img, rot)
     # img = tf.image.rot90(img, rot)
 
     label = tf.cast(features['label'], tf.int64)
@@ -111,6 +112,10 @@ def train(args):
         prob = resnet18(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'seresnet50':
         prob = se_resnet50(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'resnet110':
+        prob = resnet110(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'seresnet110':
+        prob = se_resnet110(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
 
     loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=prob, labels=y_input))
     l2_loss = tf.add_n([tf.nn.l2_loss(var) for var in tf.trainable_variables()])
@@ -147,6 +152,10 @@ def train(args):
         prob_test = resnet34(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'seresnet50':
         prob_test = se_resnet50(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'resnet110':
+        prob_test = resnet110(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'seresnet110':
+        prob_test = se_resnet110(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
 
     logit_softmax_test = tf.nn.softmax(prob_test)
     acc_test = tf.reduce_sum(tf.cast(tf.equal(tf.argmax(logit_softmax_test, 1), y_input), tf.float32))
