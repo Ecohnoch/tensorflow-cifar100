@@ -7,10 +7,11 @@ import math
 import cv2
 import os
 
-from model.resnet34 import resnet34
-from model.resnet50 import resnet50
+from model.resnet34 import resnet18, resnet34
+from model.resnet50_tl import resnet50
+from model.serenset50 import se_resnet50
 
-from utils import compute_mean_var, norm_images, unpickle, generate_tfrecord
+from utils import compute_mean_var, norm_images, unpickle, generate_tfrecord, norm_images_using_mean_var
 
 
 def parse_function(example_proto):
@@ -28,6 +29,8 @@ def parse_function(example_proto):
     flip = random.getrandbits(1)
     if flip:
         img = img[:, ::-1, :]
+    # rot = random.randint(0, 3)
+    # img = tf.image.rot90(img, rot)
 
     label = tf.cast(features['label'], tf.int64)
     return img, label
@@ -101,9 +104,13 @@ def train(args):
     lr = tf.placeholder(tf.float32, [])
 
     if network == 'resnet50':
-        prob = resnet50(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
-    elif network == 'resnet18':
+        prob = resnet50(x_input, is_training=True, kernel_initializer=tf.orthogonal_initializer())
+    elif network == 'resnet34':
         prob = resnet34(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'resnet18':
+        prob = resnet18(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'seresnet50':
+        prob = se_resnet50(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
 
     loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=prob, labels=y_input))
     l2_loss = tf.add_n([tf.nn.l2_loss(var) for var in tf.trainable_variables()])
@@ -135,7 +142,11 @@ def train(args):
     if network == 'resnet50':
         prob_test = resnet50(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'resnet18':
+        prob_test = resnet18(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'resnet34':
         prob_test = resnet34(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'seresnet50':
+        prob_test = se_resnet50(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
 
     logit_softmax_test = tf.nn.softmax(prob_test)
     acc_test = tf.reduce_sum(tf.cast(tf.equal(tf.argmax(logit_softmax_test, 1), y_input), tf.float32))
@@ -185,12 +196,19 @@ def train(args):
                     break
 
 def test(args):
+    train = unpickle('/data/ChuyuanXiong/up/cifar-100-python/train')
+    train_data = train[b'data']
+    x_train = train_data.reshape(train_data.shape[0], 3, 32, 32)
+    x_train = x_train.transpose(0, 2, 3, 1)
+
     test = unpickle(args.test_path)
     test_data  = test[b'data']
+
     x_test = test_data.reshape(test_data.shape[0], 3, 32, 32)
     x_test = x_test.transpose(0, 2, 3, 1)
     y_test= test[b'fine_labels']
-    x_test = norm_images(x_test)
+
+    x_test = norm_images_using_mean_var(x_test, *compute_mean_var(x_train))
 
     network = args.network
     ckpt = args.ckpt
@@ -207,7 +225,7 @@ def test(args):
     acc  = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(logit_softmax, 1), y_input), tf.float32))
 
     #-------------------------------Test-----------------------------------------
-    if not os.path.exists('./trans/tran.tfrecords'):
+    if not os.path.exists('./trans/test.tfrecords'):
         generate_tfrecord(x_test, y_test, './trans/', 'test.tfrecords')
     dataset_test = tf.data.TFRecordDataset('./trans/test.tfrecords')
     dataset_test = dataset_test.map(parse_test)
@@ -266,7 +284,7 @@ if __name__ == "__main__":
     parser_test = subparsers.add_parser('test')
     parser_test.add_argument('--network', default='resnet18', required=True)
     parser_test.add_argument('--test_path', default='/data/ChuyuanXiong/up/cifar-100-python/test', required=True)
-    parser_test.add_argument('--ckpt', default='/home/ChuyuanXiong/test/params/distinct/Speaker_vox_iter_58000.ckpt', required=True)
+    parser_test.add_argument('--ckpt', default='params/resnet18/Speaker_vox_iter_58000.ckpt', required=True)
     parser_test.set_defaults(func=test)
 
 

@@ -88,7 +88,7 @@ def resnet50(input_tensor, is_training=True, pooling_and_fc=True, reuse=False, k
 		# pooling_output = tf.layers.max_pooling2d(x4, (7,7), strides=(1,1), name='mpool2')
 		print('before gap: ', x4)
 		pooling_output = tf.reduce_mean(x4, [1, 2])
-		fc_output      = tf.layers.dense(pooling_output, 100, name='face_fc1', reuse=reuse, kernel_initializer=tf.contrib.layers.xavier_initializer())
+		fc_output      = tf.layers.dense(pooling_output, 100, name='face_fc1', reuse=reuse, kernel_initializer=tf.contrib.layers.xavier_initializer(), bias_initializer=tf.zeros_initializer())
 		# fc_output      = tf.layers.batch_normalization(fc_output, training=is_training, reuse=reuse, name='face_fbn')
 
 	return fc_output

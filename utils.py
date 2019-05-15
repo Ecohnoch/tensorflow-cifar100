@@ -22,6 +22,13 @@ def norm_images(image):
     image[:, :, :, 2] = (image[:, :, :, 2] - mean[2]) / var[2]
     return image
 
+def norm_images_using_mean_var(image, mean, var):
+    image = image.astype('float32')
+    image[:, :, :, 0] = (image[:, :, :, 0] - mean[0]) / var[0]
+    image[:, :, :, 1] = (image[:, :, :, 1] - mean[1]) / var[1]
+    image[:, :, :, 2] = (image[:, :, :, 2] - mean[2]) / var[2]
+    return image
+
 def unpickle(file):
     import pickle
     with open(file, 'rb') as fo:
