@@ -7,6 +7,11 @@ All models have achieved high accuracy (> 0.7).
 
 ### Usage
 
+Requirements:
+
+1. tensorflow-gpu=1.11.1
+2. tensorlayer=1.11.0
+
 download dataset:
 
 [Download Website](https://www.cs.toronto.edu/~kriz/cifar.html )

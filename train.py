@@ -224,15 +224,6 @@ def test(args):
 
     x_input = tf.placeholder(tf.float32, [None, 32, 32, 3])
     y_input = tf.placeholder(tf.int64, [None, ])
-
-    if network == 'resnet50':
-        prob = resnet50(x_input, is_training=True)
-    elif network == 'resnet18':
-        prob = resnet34(x_input, is_training=True)
-
-    logit_softmax = tf.nn.softmax(prob)
-    acc  = tf.reduce_mean(tf.cast(tf.equal(tf.argmax(logit_softmax, 1), y_input), tf.float32))
-
     #-------------------------------Test-----------------------------------------
     if not os.path.exists('./trans/test.tfrecords'):
         generate_tfrecord(x_test, y_test, './trans/', 'test.tfrecords')
@@ -243,9 +234,17 @@ def test(args):
     iterator_test = dataset_test.make_initializable_iterator()
     next_element_test = iterator_test.get_next() 
     if network == 'resnet50':
-        prob_test = resnet50(x_input, is_training=False, reuse=True)
+        prob_test = resnet50(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'resnet18':
-        prob_test = resnet34(x_input, is_training=False, reuse=True)
+        prob_test = resnet18(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'resnet34':
+        prob_test = resnet34(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'seresnet50':
+        prob_test = se_resnet50(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'resnet110':
+        prob_test = resnet110(x_input, is_training=False, reuse=True, kernel_initializer=None)
+    elif network == 'seresnet110':
+        prob_test = se_resnet110(x_input, is_training=False, reuse=True, kernel_initializer=None)
     # prob_test = tf.layers.dense(prob_test, 100, reuse=True, name='before_softmax')
     logit_softmax_test = tf.nn.softmax(prob_test)
     acc_test = tf.reduce_sum(tf.cast(tf.equal(tf.argmax(logit_softmax_test, 1), y_input), tf.float32))
