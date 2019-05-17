@@ -173,7 +173,7 @@ def train(args):
     config.allow_soft_placement = True
     config.gpu_options.allow_growth = True
 
-    now_lr = 0.1
+    now_lr = 0.001    # Warm Up
     with tf.Session(config=config) as sess:
         sess.run(tf.global_variables_initializer())
         sess.run(tf.local_variables_initializer())
