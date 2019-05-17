@@ -171,10 +171,10 @@ def resnet152(input_tensor, is_training=True, pooling_and_fc=True, reuse=False, 
 		x2 = identity_block2d(x2, 3, [128, 128, 512], stage=3, block='face_2b', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
 		x2 = identity_block2d(x2, 3, [128, 128, 512], stage=3, block='face_2c', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
 		x2 = identity_block2d(x2, 3, [128, 128, 512], stage=3, block='face_2d', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
-		x2 = identity_block2d(x2, 3, [128, 128, 512], stage=3, block='face_2d', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
-		x2 = identity_block2d(x2, 3, [128, 128, 512], stage=3, block='face_2d', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
-		x2 = identity_block2d(x2, 3, [128, 128, 512], stage=3, block='face_2d', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
-		x2 = identity_block2d(x2, 3, [128, 128, 512], stage=3, block='face_2d', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
+		x2 = identity_block2d(x2, 3, [128, 128, 512], stage=3, block='face_2e', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
+		x2 = identity_block2d(x2, 3, [128, 128, 512], stage=3, block='face_2f', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
+		x2 = identity_block2d(x2, 3, [128, 128, 512], stage=3, block='face_2g', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
+		x2 = identity_block2d(x2, 3, [128, 128, 512], stage=3, block='face_2h', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
 
 
 		x3 = conv_block_2d(x2, 3, [256, 256, 1024], stage=4, block='face_3a' , is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
