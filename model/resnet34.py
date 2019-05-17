@@ -34,7 +34,7 @@ def conv_block_2d(input_tensor, kernel_size, filters, stage, block, is_training,
 
 	conv_name_4 = 'conv' + str(stage) + '_' + str(block) + '_1x1_shortcut'
 	bn_name_4   = 'bn'   + str(stage) + '_' + str(block) + '_1x1_shortcut'
-	shortcut = tf.layers.conv2d(input_tensor, (1,1), (kernel_size, kernel_size), use_bias=False, strides=strides, padding='SAME', kernel_initializer=kernel_initializer, name=conv_name_4, reuse=reuse)
+	shortcut = tf.layers.conv2d(input_tensor, filters3, (kernel_size, kernel_size), use_bias=False, strides=strides, padding='SAME', kernel_initializer=kernel_initializer, name=conv_name_4, reuse=reuse)
 	shortcut = tf.layers.batch_normalization(shortcut, training=is_training, name=bn_name_4, reuse=reuse)
 
 	x = tf.add(shortcut, x)
