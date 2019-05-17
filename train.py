@@ -8,8 +8,8 @@ import cv2
 import os
 
 from model.resnet34 import resnet18, resnet34
-from model.resnet50_tl import resnet50, resnet110
-from model.serenset50 import se_resnet50, se_resnet110
+from model.resnet50_tl import resnet50, resnet110, resnet152
+from model.serenset50 import se_resnet50, se_resnet110, se_resnet152
 
 from utils import compute_mean_var, norm_images, unpickle, generate_tfrecord, norm_images_using_mean_var
 
@@ -116,6 +116,10 @@ def train(args):
         prob = resnet110(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'seresnet110':
         prob = se_resnet110(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'seresnet152':
+        prob = se_resnet152(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'resnet152':
+        prob = resnet152(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
 
     loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=prob, labels=y_input))
     l2_loss = tf.add_n([tf.nn.l2_loss(var) for var in tf.trainable_variables()])
@@ -156,6 +160,10 @@ def train(args):
         prob_test = resnet110(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'seresnet110':
         prob_test = se_resnet110(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'seresnet152':
+        prob_test = se_resnet152(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+    elif network == 'resnet152':
+        prob_test = resnet152(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
 
     logit_softmax_test = tf.nn.softmax(prob_test)
     acc_test = tf.reduce_sum(tf.cast(tf.equal(tf.argmax(logit_softmax_test, 1), y_input), tf.float32))
@@ -245,6 +253,11 @@ def test(args):
         prob_test = resnet110(x_input, is_training=False, reuse=True, kernel_initializer=None)
     elif network == 'seresnet110':
         prob_test = se_resnet110(x_input, is_training=False, reuse=True, kernel_initializer=None)
+    elif network == 'serenset152':
+        prob_test = se_resnet152(x_input, is_training=False, reuse=True, kernel_initializer=None)
+    elif network == 'resnet152':
+        prob_test = resnet152(x_input, is_training=False, reuse=True, kernel_initializer=None)
+    
     # prob_test = tf.layers.dense(prob_test, 100, reuse=True, name='before_softmax')
     logit_softmax_test = tf.nn.softmax(prob_test)
     acc_test = tf.reduce_sum(tf.cast(tf.equal(tf.argmax(logit_softmax_test, 1), y_input), tf.float32))
