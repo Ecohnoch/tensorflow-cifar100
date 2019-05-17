@@ -243,21 +243,22 @@ def test(args):
     iterator_test = dataset_test.make_initializable_iterator()
     next_element_test = iterator_test.get_next() 
     if network == 'resnet50':
-        prob_test = resnet50(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob_test = resnet50(x_input, is_training=False, reuse=False, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'resnet18':
-        prob_test = resnet18(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob_test = resnet18(x_input, is_training=False, reuse=False, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'resnet34':
-        prob_test = resnet34(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob_test = resnet34(x_input, is_training=False, reuse=False, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'seresnet50':
-        prob_test = se_resnet50(x_input, is_training=False, reuse=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob_test = se_resnet50(x_input, is_training=False, reuse=False, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'resnet110':
-        prob_test = resnet110(x_input, is_training=False, reuse=True, kernel_initializer=None)
+        prob_test = resnet110(x_input, is_training=False, reuse=False, kernel_initializer=None)
     elif network == 'seresnet110':
-        prob_test = se_resnet110(x_input, is_training=False, reuse=True, kernel_initializer=None)
+        prob_test = se_resnet110(x_input, is_training=False, reuse=False, kernel_initializer=None)
     elif network == 'serenset152':
-        prob_test = se_resnet152(x_input, is_training=False, reuse=True, kernel_initializer=None)
+        prob_test = se_resnet152(x_input, is_training=False, reuse=False, kernel_initializer=None)
     elif network == 'resnet152':
-        prob_test = resnet152(x_input, is_training=False, reuse=True, kernel_initializer=None)
+        prob_test = resnet152(x_input, is_training=False, reuse=False, kernel_initializer=None)
+
     
     # prob_test = tf.layers.dense(prob_test, 100, reuse=True, name='before_softmax')
     logit_softmax_test = tf.nn.softmax(prob_test)
@@ -268,10 +269,13 @@ def test(args):
     bn_moving_vars = [g for g in g_list if 'moving_mean' in g.name]
     bn_moving_vars += [g for g in g_list if 'moving_variance' in g.name]
     var_list += bn_moving_vars
+
     saver = tf.train.Saver(var_list=var_list)
     config = tf.ConfigProto()
     config.allow_soft_placement = True
     config.gpu_options.allow_growth = True
+
+
 
     with tf.Session(config=config) as sess:
         saver.restore(sess, ckpt)
