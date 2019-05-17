@@ -32,7 +32,7 @@ params:
 
 * batch_size: 64 default
 * epoch: 200 is best
-* network: resnet18/resnet50
+* network: resnet18/resnet50/resnet110/resnet152/seresnet50/seresnet110/seresnet152
 * opt: adam/momentum/nesterov
 * train_path:  your train path
 * test_path: your test path
