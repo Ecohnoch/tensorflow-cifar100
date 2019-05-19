@@ -8,8 +8,10 @@ import cv2
 import os
 
 from model.resnet34 import resnet18, resnet34
-from model.resnet50_tl import resnet50, resnet110, resnet152
+from model.resnet50 import resnet50, resnet110, resnet152
 from model.serenset50 import se_resnet50, se_resnet110, se_resnet152
+from model.densenet import densenet121, densenet161, densenet169, densenet201
+
 from model.seresnet_fixed import get_resnet
 
 from utils import compute_mean_var, norm_images, unpickle, generate_tfrecord, norm_images_using_mean_var
