@@ -126,13 +126,13 @@ def train(args):
     elif network == 'seresnet_fixed':
         prob = get_resnet(x_input, 152, trainable=True, w_init=tf.contrib.layers.xavier_initializer(uniform=False))
     elif network == 'densenet121':
-        prob = densenet121(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = densenet121(x_input, reuse=False, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'densenet169':
-        prob = densenet169(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = densenet169(x_input, reuse=False, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'densenet201':
-        prob = densenet201(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = densenet201(x_input, reuse=False, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'densenet161':
-        prob = densenet161(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = densenet161(x_input, reuse=False, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
 
     loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=prob, labels=y_input))
     l2_loss = tf.add_n([tf.nn.l2_loss(var) for var in tf.trainable_variables()])
