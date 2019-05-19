@@ -56,7 +56,7 @@ class Desnet:
         self.is_training = is_training
         self.reuse = reuse
 
-        x = tf.layers.conv2d(self.input_tensor, self.inner_channel, (3,3), padding='SAME', use_bias=False, name='conv_first', kernel_initializer=kernel_initializer)
+        x = tf.layers.conv2d(self.input_tensor, self.inner_channel, (3,3), padding='SAME', reuse=reuse, use_bias=False, name='conv_first', kernel_initializer=kernel_initializer)
         
         for index in range(len(nblocks) - 1):
             print('make_layer_%d:'%(index), x)
