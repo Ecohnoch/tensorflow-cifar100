@@ -109,23 +109,23 @@ def train(args):
     lr = tf.placeholder(tf.float32, [])
 
     if network == 'resnet50':
-        prob = resnet50(x_input, is_training=True, kernel_initializer=tf.orthogonal_initializer())
+        prob = resnet50(x_input, is_training=True, reuse=False, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'resnet34':
-        prob = resnet34(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = resnet34(x_input, is_training=True, reuse=False, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'resnet18':
-        prob = resnet18(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = resnet18(x_input, is_training=True, reuse=False, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     elif network == 'seresnet50':
-        prob = se_resnet50(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = se_resnet50(x_input, is_training=True, reuse=False, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'resnet110':
-        prob = resnet110(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = resnet110(x_input, is_training=True, reuse=False, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'seresnet110':
-        prob = se_resnet110(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = se_resnet110(x_input, is_training=True, reuse=False, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'seresnet152':
-        prob = se_resnet152(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = se_resnet152(x_input, is_training=True, reuse=False, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'resnet152':
-        prob = resnet152(x_input, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = resnet152(x_input, is_training=True, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'seresnet_fixed':
-        prob = get_resnet(x_input, 152, trainable=True, w_init=tf.contrib.layers.xavier_initializer(uniform=False))
+        prob = get_resnet(x_input, 152, trainable=True, w_init=tf.orthogonal_initializer())
     elif network == 'densenet121':
         prob = densenet121(x_input, reuse=False, is_training=True, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'densenet169':

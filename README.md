@@ -37,6 +37,27 @@ params:
 * train_path:  your train path
 * test_path: your test path
 
+Have Done
+```
+resnet18
+resnet34
+resnet50
+resnet110
+resnet152
+seresnet50
+seresnet110
+seresnet152
+densenet121
+densenet169
+densenet201
+
+# TODO
+preresnet
+resnext
+mobilenet
+```
+
+
 test:
 
 ```
