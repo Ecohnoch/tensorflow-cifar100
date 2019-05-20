@@ -57,7 +57,7 @@ params:
 dataset | network | top1 acc | epoch (lr=0.1) | epoch (lr=0.02) |  batch_size | initializer |  warmup |   weight decay|
 --------|---------|---------|-----------------|----------------|--------------|-------------|---------|--------------|
 cifar100| resnet18   | 0.740  |   60          | > 60           |    128       | msra       |     0    |        0
-cifar100| densenet169| 0.695 |  60            | > 60           |    64        | msra       |     1    |        0     
+cifar100| densenet169| 0.743 |  60            | > 60           |    64        | orth       |     1    |      5e-4     
 
 
 // TODO

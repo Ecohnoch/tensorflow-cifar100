@@ -101,6 +101,10 @@ if __name__ == '__main__':
     a = np.random.rand(3, 32, 32, 3)
     inp = tf.placeholder(tf.float32, [None, 32, 32, 3])
     out = densenet201(inp, is_training=True, reuse=False, kernel_initializer=None)
+
+    conv_vars = [var for var in tf.trainable_variables() if 'conv' in var.name]
+    print(conv_vars)
+    
     print(out)
 
 
