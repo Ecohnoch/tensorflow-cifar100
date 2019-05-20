@@ -32,7 +32,7 @@ params:
 
 * batch_size: 64 default
 * epoch: 200 is best
-* network: resnet18/resnet50/resnet110/resnet152/seresnet50/seresnet110/seresnet152
+* network: resnet18/resnet50/resnet110/resnet152/seresnet50/seresnet110/seresnet152/densenet121/densenet169/densenet161/densenet201
 * opt: adam/momentum/nesterov
 * train_path:  your train path
 * test_path: your test path
@@ -54,20 +54,18 @@ params:
 
 ### Results
 
-dataset | network | top1 acc | epoch (lr=0.1) | epoch (lr=0.02) 
---------|---------|---------|-----------------|---------------
-cifar100| resnet18| 0.74    |   60            | > 60
+dataset | network | top1 acc | epoch (lr=0.1) | epoch (lr=0.02) |  batch_size | initializer |  warmup |   weight decay|
+--------|---------|---------|-----------------|----------------|--------------|-------------|---------|--------------|
+cifar100| resnet18   | 0.740  |   60          | > 60           |    128       | msra       |     0    |        0
+cifar100| densenet169| 0.695 |  60            | > 60           |    64        | msra       |     1    |        0     
 
 
 // TODO
-* resnet34
-* resnet50
-* resnet101
-* resnet152
+
 * resnext50
 * resnext101
 * resnext152
-* densenet
+* preresnet18
 * ...
 
 

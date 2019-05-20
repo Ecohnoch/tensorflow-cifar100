@@ -105,6 +105,7 @@ def train(args):
 
     x_input = tf.placeholder(tf.float32, [None, 32, 32, 3])
     y_input = tf.placeholder(tf.int64, [None, ])
+    y_input_one_hot = tf.one_hot(y_input, 100)
     lr = tf.placeholder(tf.float32, [])
 
     if network == 'resnet50':
@@ -126,17 +127,19 @@ def train(args):
     elif network == 'seresnet_fixed':
         prob = get_resnet(x_input, 152, trainable=True, w_init=tf.contrib.layers.xavier_initializer(uniform=False))
     elif network == 'densenet121':
-        prob = densenet121(x_input, reuse=False, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = densenet121(x_input, reuse=False, is_training=True, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'densenet169':
-        prob = densenet169(x_input, reuse=False, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = densenet169(x_input, reuse=False, is_training=True, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'densenet201':
-        prob = densenet201(x_input, reuse=False, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = densenet201(x_input, reuse=False, is_training=True, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'densenet161':
-        prob = densenet161(x_input, reuse=False, is_training=True, kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+        prob = densenet161(x_input, reuse=False, is_training=True, kernel_initializer=tf.orthogonal_initializer())
 
-    loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=prob, labels=y_input))
-    l2_loss = tf.add_n([tf.nn.l2_loss(var) for var in tf.trainable_variables()])
-    # loss = l2_loss * 5e-4 + loss
+    loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=prob, labels=y_input_one_hot))
+
+    conv_var = [var for var in tf.trainable_variables() if 'conv' in var.name]
+    l2_loss = tf.add_n([tf.nn.l2_loss(var) for var in conv_var])
+    loss = l2_loss * 5e-4 + loss
 
     if opt == 'adam':
         opt = tf.train.AdamOptimizer(lr)

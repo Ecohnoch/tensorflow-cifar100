@@ -71,7 +71,7 @@ class Desnet:
         print('before gap:', x)
         x = tf.reduce_mean(x, [1, 2], name='gap')
         print('after gap:', x)
-        x = tf.layers.dense(x, n_class, name='dense', reuse=reuse, kernel_initializer=kernel_initializer)
+        x = tf.layers.dense(x, n_class, name='dense', reuse=reuse, kernel_initializer=tf.contrib.layers.xavier_initializer(uniform=False))
         self.output = x
 
 
