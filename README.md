@@ -50,6 +50,9 @@ ResNeXt152
 SENet50
 SENet110
 SENet152
+SE-ResNext50
+SE-ResNext110
+SE-ResNext152
 DenseNet121
 DenseNet169
 DenseNet201
@@ -108,3 +111,5 @@ Continuous update!
 ### Author
 
 Ecohnoch (Chuyuan Xiong)
+
+If this project is very helpful for you, please star it!

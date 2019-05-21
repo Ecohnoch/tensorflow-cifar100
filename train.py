@@ -12,6 +12,7 @@ from model.resnet50 import resnet50, resnet110, resnet152
 from model.serenset50 import se_resnet50, se_resnet110, se_resnet152
 from model.densenet import densenet121, densenet161, densenet169, densenet201
 from model.resnext import resnext50, resnext110, resnext152
+from model.seresnext import se_resnext50, se_resnext110, se_resnext152
 
 from model.seresnet_fixed import get_resnet
 
@@ -141,6 +142,12 @@ def train(args):
         prob = resnext110(x_input, reuse=False, is_training=True, cardinality=32, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'resnext152':
         prob = resnext152(x_input, reuse=False, is_training=True, cardinality=32, kernel_initializer=tf.orthogonal_initializer())
+    elif network == 'seresnext50':
+        prob = se_resnext50(x_input, reuse=False, is_training=True, cardinality=32, kernel_initializer=tf.orthogonal_initializer())
+    elif network == 'seresnext110':
+        prob = se_resnext110(x_input, reuse=False, is_training=True, cardinality=32, kernel_initializer=tf.orthogonal_initializer())
+    elif network == 'seresnext152':
+        prob = se_resnext152(x_input, reuse=False, is_training=True, cardinality=32, kernel_initializer=tf.orthogonal_initializer())
 
 
 
@@ -205,6 +212,12 @@ def train(args):
         prob_test = resnext110(x_input, is_training=False, reuse=True, cardinality=32, kernel_initializer=None)
     elif network == 'resnext152':
         prob_test = resnext152(x_input, is_training=False, reuse=True, cardinality=32, kernel_initializer=None)
+    elif network == 'seresnext50':
+        prob_test = se_resnext50(x_input, reuse=True, is_training=False, cardinality=32, kernel_initializer=None)
+    elif network == 'seresnext110':
+        prob_test = se_resnext110(x_input, reuse=True, is_training=False, cardinality=32, kernel_initializer=None)
+    elif network == 'seresnext152':
+        prob_test = se_resnext152(x_input, reuse=True, is_training=False, cardinality=32, kernel_initializer=None)
 
     logit_softmax_test = tf.nn.softmax(prob_test)
     acc_test = tf.reduce_sum(tf.cast(tf.equal(tf.argmax(logit_softmax_test, 1), y_input), tf.float32))
@@ -315,6 +328,12 @@ def test(args):
         prob_test = resnext110(x_input, is_training=False, reuse=False, cardinality=32, kernel_initializer=None)
     elif network == 'resnext152':
         prob_test = resnext152(x_input, is_training=False, reuse=False, cardinality=32, kernel_initializer=None)
+    elif network == 'seresnext50':
+        prob_test = se_resnext50(x_input, reuse=False, is_training=False, cardinality=32, kernel_initializer=None)
+    elif network == 'seresnext110':
+        prob_test = se_resnext110(x_input, reuse=False, is_training=False, cardinality=32, kernel_initializer=None)
+    elif network == 'seresnext152':
+        prob_test = se_resnext152(x_input, reuse=False, is_training=False, cardinality=32, kernel_initializer=None)
 
     
     # prob_test = tf.layers.dense(prob_test, 100, reuse=True, name='before_softmax')
