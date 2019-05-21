@@ -89,8 +89,20 @@ cifar100| densenet169| 0.743 |  60            | > 60           |    64        | 
 * preresnet18
 * ...
 
+### Pre-trained model download
+
+Continuous update!
+
+1. [ResNet18,Accuracy=0.740](https://github.com/Ecohnoch/tensorflow-cifar100/tree/master/params/resnet18)
+2. [DenseNet169,Accuracy=0.743,Password=7qj2](https://pan.baidu.com/s/1Watp2FzcuLBym_x4FyrzBA)
+
+
 
 
 ### References
 
 1. [pytorch-cifar100](https://github.com/weiaicunzai/pytorch-cifar100)
+
+### Author
+
+Ecohnoch (Chuyuan Xiong)
