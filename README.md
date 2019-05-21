@@ -39,21 +39,23 @@ params:
 
 Have Done
 ```
-resnet18
-resnet34
-resnet50
-resnet110
-resnet152
-seresnet50
-seresnet110
-seresnet152
-densenet121
-densenet169
-densenet201
+ResNet18
+ResNet34
+ResNet50
+ResNet110
+ResNet152
+ResNeXt50
+ResNeXt110
+ResNeXt152
+SENet50
+SENet110
+SENet152
+DenseNet121
+DenseNet169
+DenseNet201
 
 # TODO
 preresnet
-resnext
 mobilenet
 ```
 
