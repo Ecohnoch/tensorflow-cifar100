@@ -10,7 +10,7 @@ import os
 from model.resnet34 import resnet18, resnet34
 from model.resnet50 import resnet50, resnet110, resnet152
 from model.serenset50 import se_resnet50, se_resnet110, se_resnet152
-from model.densenet import densenet121, densenet161, densenet169, densenet201
+from model.densenet import densenet121, densenet161, densenet169, densenet201, densenet100bc, densenet190bc
 from model.resnext import resnext50, resnext110, resnext152
 from model.seresnext import se_resnext50, se_resnext110, se_resnext152
 
@@ -136,6 +136,10 @@ def train(args):
         prob = densenet201(x_input, reuse=False, is_training=True, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'densenet161':
         prob = densenet161(x_input, reuse=False, is_training=True, kernel_initializer=tf.orthogonal_initializer())
+    elif network == 'densenet100bc':
+        prob = densenet100bc(x_input, reuse=False, is_training=True, kernel_initializer=tf.orthogonal_initializer())
+    elif network == 'densenet190bc':
+        prob = densenet190bc(x_input, reuse=False, is_training=True, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'resnext50':
         prob = resnext50(x_input, reuse=False, is_training=True, cardinality=32, kernel_initializer=tf.orthogonal_initializer())
     elif network == 'resnext110':
@@ -206,6 +210,10 @@ def train(args):
         prob_test = densenet201(x_input, is_training=False, reuse=True, kernel_initializer=None)
     elif network == 'densenet161':
         prob_test = densenet161(x_input, is_training=False, reuse=True, kernel_initializer=None)
+    elif network == 'densenet100bc':
+        prob_test = densenet100bc(x_input, reuse=True, is_training=False, kernel_initializer=None)
+    elif network == 'densenet190bc':
+        prob_test = densenet190bc(x_input, reuse=True, is_training=False, kernel_initializer=None)
     elif network == 'resnext50':
         prob_test = resnext50(x_input, is_training=False, reuse=True, cardinality=32, kernel_initializer=None)
     elif network == 'resnext110':
@@ -322,6 +330,10 @@ def test(args):
         prob_test = densenet201(x_input, is_training=False, reuse=False, kernel_initializer=None)
     elif network == 'densenet161':
         prob_test = densenet161(x_input, is_training=False, reuse=False, kernel_initializer=None)
+    elif network == 'densenet100bc':
+        prob_test = densenet100bc(x_input, reuse=False, is_training=False, kernel_initializer=None)
+    elif network == 'densenet190bc':
+        prob_test = densenet190bc(x_input, reuse=False, is_training=False, kernel_initializer=None)
     elif network == 'resnext50':
         prob_test = resnext50(x_input, is_training=False, reuse=False, cardinality=32, kernel_initializer=None)
     elif network == 'resnext110':

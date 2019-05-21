@@ -32,7 +32,7 @@ params:
 
 * batch_size: 64 default
 * epoch: 200 is best
-* network: resnet18/resnet50/resnet110/resnet152/seresnet50/seresnet110/seresnet152/densenet121/densenet169/densenet161/densenet201
+* network: resnet18/resnet50/resnet110/resnet152/seresnet50/seresnet110/seresnet152/densenet121/densenet169/densenet161/densenet201/resnext50/resnext110/resnext152/seresnext50/seresnext110/seresnext152/densenet100bc/densenet190bc
 * opt: adam/momentum/nesterov
 * train_path:  your train path
 * test_path: your test path
@@ -56,6 +56,8 @@ SE-ResNext152
 DenseNet121
 DenseNet169
 DenseNet201
+DenseNet100BC
+DenseNet190BC
 
 # TODO
 preresnet
