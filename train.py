@@ -16,7 +16,7 @@ from model.seresnext import se_resnext50, se_resnext110, se_resnext152
 
 from model.seresnet_fixed import get_resnet
 
-from utils import compute_mean_var, norm_images, unpickle, generate_tfrecord, norm_images_using_mean_var
+from utils import compute_mean_var, norm_images, unpickle, generate_tfrecord, norm_images_using_mean_var, lr_schedule_200ep, lr_schedule_300ep
 
 
 def parse_function(example_proto):
@@ -51,15 +51,13 @@ def parse_test(example_proto):
     label = tf.cast(features['label'], tf.int64)
     return img, label
 
-def lr_schedule(epoch):
-    if epoch < 60:
-        return 0.1
-    if epoch < 120:
-        return 0.02
-    if epoch < 160:
-        return 0.004
-    if epoch < 200:
-        return 0.0008
+def lr_schedule(epoch, tot_ep):
+    if tot_ep == 200:
+        return lr_schedule_200ep(epoch)
+    if tot_ep == 300:
+        return lr_schedule_300ep(epoch)
+    print('*** Choose correct ep 200 or 300.')
+
     
 
 def train(args):
@@ -230,7 +228,7 @@ def train(args):
     logit_softmax_test = tf.nn.softmax(prob_test)
     acc_test = tf.reduce_sum(tf.cast(tf.equal(tf.argmax(logit_softmax_test, 1), y_input), tf.float32))
     #----------------------------------------------------------------------------
-    saver = tf.train.Saver()
+    saver = tf.train.Saver(max_to_keep=1, var_list=tf.global_variables())
     config = tf.ConfigProto()
     config.allow_soft_placement = True
     config.gpu_options.allow_growth = True
@@ -241,6 +239,7 @@ def train(args):
         sess.run(tf.local_variables_initializer())
 
         counter = 0
+        max_test_acc = -1
         for i in range(epoch):
             sess.run(iterator.initializer)
             while True:
@@ -263,15 +262,14 @@ def train(args):
                                 avg_acc.append(acc_test_val)
                             except tf.errors.OutOfRangeError:
                                 print('end test ', np.sum(avg_acc)/len(y_test))
-                                if np.sum(avg_acc)/len(y_test) > 0.7:
-                                    print("******** 0.7 Got!")
-                                    saver = tf.train.Saver(var_list=tf.global_variables())
-                                    filename = 'params/distinct/Speaker_vox_iter_{:d}'.format(counter) + '.ckpt'
-                                    saver.save(sess, filename)
+                                now_test_acc = np.sum(avg_acc)/len(y_test)
+                                if now_test_acc > max_test_acc:
+                                    print('***** Max test changed: ', now_test_acc)
+                                    filename = 'params/distinct/'+network+'_{}.ckpt'.format(counter)
                                 break
                 except tf.errors.OutOfRangeError:
                     print('end epoch %d/%d , lr: %f'%(i, epoch, lr_val))
-                    now_lr = lr_schedule(i)
+                    now_lr = lr_schedule(i, args.epoch)
                     break
 
 def test(args):

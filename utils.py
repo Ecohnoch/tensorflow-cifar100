@@ -51,3 +51,22 @@ def generate_tfrecord(train, labels, output_path, output_name):
             print("%d num imgs processed" % ind)
     writer.close()
 
+
+
+def lr_schedule_200ep(epoch):
+    if epoch < 60:
+        return 0.1
+    if epoch < 120:
+        return 0.02
+    if epoch < 160:
+        return 0.004
+    if epoch < 200:
+        return 0.0008
+
+def lr_schedule_300ep(epoch):
+    if epoch < 150:
+        return 0.1
+    if epoch < 225:
+        return 0.01
+    if epoch < 300:
+        return 0.001
