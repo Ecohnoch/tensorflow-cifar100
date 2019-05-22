@@ -266,6 +266,7 @@ def train(args):
                                 if now_test_acc > max_test_acc:
                                     print('***** Max test changed: ', now_test_acc)
                                     filename = 'params/distinct/'+network+'_{}.ckpt'.format(counter)
+                                    saver.save(sess, filename)
                                 break
                 except tf.errors.OutOfRangeError:
                     print('end epoch %d/%d , lr: %f'%(i, epoch, lr_val))

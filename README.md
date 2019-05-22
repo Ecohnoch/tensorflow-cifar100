@@ -103,6 +103,8 @@ Continuous update!
 
 1. [ResNet18,Accuracy=0.740](https://github.com/Ecohnoch/tensorflow-cifar100/tree/master/params/resnet18)
 2. [DenseNet169,Accuracy=0.743,Password=7qj2](https://pan.baidu.com/s/1Watp2FzcuLBym_x4FyrzBA)
+3. [DenseNet100-BC,Accuracy=0.728,Password=fwi4](https://pan.baidu.com/s/1A6esP4TdC2NxmIfj30DG3w)
+4. [Se-ResNet110,Accuracy=0.725,Password=we64](https://pan.baidu.com/s/1p8U3W1HOOrYV5hzZQFZY0g)
 
 
 
