@@ -265,6 +265,7 @@ def train(args):
                                 now_test_acc = np.sum(avg_acc)/len(y_test)
                                 if now_test_acc > max_test_acc:
                                     print('***** Max test changed: ', now_test_acc)
+                                    max_test_acc = now_test_acc
                                     filename = 'params/distinct/'+network+'_{}.ckpt'.format(counter)
                                     saver.save(sess, filename)
                                 break
