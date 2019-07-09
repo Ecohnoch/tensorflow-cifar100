@@ -1,1 +1,1 @@
-tensorlayer-1.11.1
+tensorlayer==1.11.1

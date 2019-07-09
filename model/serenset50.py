@@ -99,7 +99,7 @@ def get_se_resnet(input_tensor, block, is_training, reuse, kernel_initializer=No
 			x = identity_block2d(x, 3, [512, 512, 2048], stage='4b_{}'.format(fourth_block), block='face_{}'.format(fourth_block), is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
 		
 		# pooling_output = tf.layers.max_pooling2d(x4, (7,7), strides=(1,1), name='mpool2')
-		print('before gap: ', x)
+		# print('before gap: ', x)
 		
 		pooling_output = tl.layers.GlobalMeanPool2d(x, name='gap')
 		fc_output      = tl.layers.DenseLayer(pooling_output, 100, name='face_fc1', W_init=tf.contrib.layers.xavier_initializer(), b_init=tf.zeros_initializer())

@@ -60,13 +60,13 @@ def resnet18(input_tensor, is_training=True, pooling_and_fc=True, reuse=False, k
 	x4 = conv_block_2d(x3, 3, [256, 512, 512], stage=5, block='4a', strides=(2,2), is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
 	x4 = identity_block2d(x4, 3, [256, 512, 512], stage=5, block='4b', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
 
-	print('before gap: ', x4)
+	# print('before gap: ', x4)
 	x4 = tf.reduce_mean(x4, [1,2])
-	print('after gap: ', x4)
+	# print('after gap: ', x4)
 	# flatten = tf.contrib.layers.flatten(x4)
 	prob = tf.layers.dense(x4, 100, reuse=reuse, kernel_initializer=tf.contrib.layers.xavier_initializer())
 	# prob = tf.layers.batch_normalization(prob, training=is_training, name='fbn', reuse=reuse)
-	print('prob', prob)
+	# print('prob', prob)
 
 	return prob
 
@@ -99,12 +99,12 @@ def resnet34(input_tensor, is_training=True, pooling_and_fc=True, reuse=False, k
 	x4 = identity_block2d(x4, 3, [256, 512, 512], stage=4, block='4c', is_training=is_training, reuse=reuse, kernel_initializer=kernel_initializer)
 
 
-	print('before gap: ', x4)
+	# print('before gap: ', x4)
 	x4 = tf.reduce_mean(x4, [1,2])
-	print('after gap: ', x4)
+	# print('after gap: ', x4)
 	# flatten = tf.contrib.layers.flatten(x4)
 	prob = tf.layers.dense(x4, 100, reuse=reuse, kernel_initializer=tf.contrib.layers.xavier_initializer(), bias_initializer=tf.zeros_initializer())
 	# prob = tf.layers.batch_normalization(prob, training=is_training, name='fbn', reuse=reuse)
-	print('prob', prob)
+	# print('prob', prob)
 
 	return prob

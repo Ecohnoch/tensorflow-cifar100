@@ -22,7 +22,7 @@ class bottleneck:
         x = tf.nn.relu(x)
         x = tf.layers.conv2d(x, self.growth_rate, (3,3), use_bias=False, padding='SAME', name=self.name+'conv2', reuse=self.reuse, kernel_initializer=self.kernel_initializer)
         # return tf.concat([x, self.input_tensor], axis=1)
-        print('Bottle_neck_name: ', self.name)
+        # print('Bottle_neck_name: ', self.name)
 
         return tf.concat([x, self.input_tensor], 3)
 
@@ -40,7 +40,7 @@ class transition:
         x = tf.layers.batch_normalization(self.input_tensor, training=self.is_training, reuse=self.reuse, name=self.name + 'bn0')
         x = tf.layers.conv2d(x, self.out_channels, (1,1), use_bias=False, name=self.name+'conv1', reuse=self.reuse, kernel_initializer=self.kernel_initializer)
         x = tf.layers.average_pooling2d(x, pool_size=[2,2], strides=[2,2], name=self.name+'avg_pool1')
-        print('Transition: ', self.name)
+        # print('Transition: ', self.name)
         return x
 
 class Densenet:
@@ -60,7 +60,7 @@ class Densenet:
         x = tf.layers.conv2d(self.input_tensor, self.inner_channel, (3,3), padding='SAME', reuse=reuse, use_bias=False, name='conv_first', kernel_initializer=kernel_initializer)
         
         for index in range(len(nblocks) - 1):
-            print('make_layer_%d:'%(index), x)
+            # print('make_layer_%d:'%(index), x)
             x = self.make_dense_layer(x, block, nblocks[index], name='block_'+str(index), kernel_initializer=kernel_initializer)
             self.inner_channel += growth_rate * nblocks[index]
             out_channels = int(self.reduction * self.inner_channel)
@@ -69,9 +69,9 @@ class Densenet:
         x = self.make_dense_layer(x, block, nblocks[len(nblocks) - 1], name='last_block',kernel_initializer=kernel_initializer)
         x = tf.layers.batch_normalization(x, training=self.is_training, reuse=self.reuse, name='bn-1')
         x = tf.nn.relu(x)
-        print('before gap:', x)
+        # print('before gap:', x)
         x = tf.reduce_mean(x, [1, 2], name='gap')
-        print('after gap:', x)
+        # print('after gap:', x)
         x = tf.layers.dense(x, n_class, name='dense', reuse=reuse, kernel_initializer=tf.contrib.layers.xavier_initializer(uniform=False))
         self.output = x
 
@@ -99,7 +99,7 @@ class Densenet_BC:
         x = tf.layers.conv2d(self.input_tensor, self.inner_channel, (3,3), padding='SAME', reuse=reuse, use_bias=False, name='conv_first', kernel_initializer=kernel_initializer)
         
         x = self.make_dense_layer(x, self.block, self.nblocks, name='dense1', kernel_initializer=kernel_initializer)
-        print(x.shape, x.shape[-1])
+        # print(x.shape, x.shape[-1])
         x = transition(x, int(math.floor(int(x.shape[-1]) * self.reduction)), is_training=self.is_training, reuse=self.reuse, name='trainsition_1', kernel_initializer=kernel_initializer).down_sample()
 
         x = self.make_dense_layer(x, self.block, self.nblocks, name='dense2', kernel_initializer=kernel_initializer)
@@ -109,9 +109,9 @@ class Densenet_BC:
 
         x = tf.layers.batch_normalization(x, training=self.is_training, reuse=self.reuse, name='bn-1')
         x = tf.nn.relu(x)
-        print('before gap:', x)
+        # print('before gap:', x)
         x = tf.reduce_mean(x, [1, 2], name='gap')
-        print('after gap:', x)
+        # print('after gap:', x)
         x = tf.layers.dense(x, n_class, name='dense', reuse=reuse, kernel_initializer=tf.contrib.layers.xavier_initializer(uniform=False))
         self.output = x
 
