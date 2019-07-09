@@ -77,7 +77,17 @@ params:
 * test_path: your test path
 * ckpt:  your pre-trained model. You can try the [\$THIS_REPO/params/resnet18/Speaker_vox_iter_58000.ckpt]
 
+Also, If you have the pre-trained model, you can try the interface to quickly access to the test results. Just try this:
 
+```
+$ cd [to the root directory of this repo]
+$ python
+>>> from pretrained.cifar100 import cifar100
+>>> model = cifar100(model='resnet18')
+>>> model.test()
+```
+
+Or you can cd to the dir and then edit and run example.py.
 
 
 ### Results
